@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>spring-boot-redis-stream-core</module>
+        <module>spring-boot-redis-stream-sample</module>
     </modules>
 
     <properties>
