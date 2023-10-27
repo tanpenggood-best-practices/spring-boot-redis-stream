@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
@@ -68,9 +67,10 @@ public class RedisStreamConfiguration {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(coreSize);
         taskExecutor.setMaxPoolSize(coreSize);
-        taskExecutor.setQueueCapacity(0);
+        // https://github.com/spring-projects/spring-data-redis/issues/2753
+        taskExecutor.setQueueCapacity(100);
         taskExecutor.setThreadNamePrefix("my-redis-stream-");
-        taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        taskExecutor.setRejectedExecutionHandler((r, executor) -> log.error("RejectedExecutionHandler: runnable={} executor={}", r, executor));
         // If not initialized, the actuator cannot be found
         taskExecutor.initialize();
         return taskExecutor;
