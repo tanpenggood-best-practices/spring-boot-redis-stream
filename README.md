@@ -1,6 +1,6 @@
 ## Spring Boot Redis Stream
 
-I use the best practices of Redis stream in spring boot.
+My best practices for operating Redis stream with redis template in Spring Boot 2.x
 
 ### Feature
 
