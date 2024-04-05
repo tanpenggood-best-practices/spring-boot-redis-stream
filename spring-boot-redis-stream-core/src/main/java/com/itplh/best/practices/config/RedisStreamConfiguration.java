@@ -2,8 +2,9 @@ package com.itplh.best.practices.config;
 
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.itplh.best.practices.stream.MyStreamListener;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,21 +30,23 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
 @Slf4j
 @Configuration
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RedisStreamConfiguration {
 
-    private static Set<String> listenerContainerNames = new ConcurrentSkipListSet<>();
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final List<MyStreamListener> streamListeners;
+    private final ObjectMapper objectMapper;
 
-    private RedisTemplate<String, Object> redisTemplate;
-    private List<MyStreamListener> streamListeners;
+    private static Set<String> listenerContainerNames = new ConcurrentSkipListSet<>();
 
     @Bean
     public StreamMessageListenerContainer.StreamMessageListenerContainerOptions<String, MapRecord<String, String, String>> streamMessageListenerContainerOptions() {
         // jackson2JsonRedisSerializer
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-        ObjectMapper om = new ObjectMapper();
+        ObjectMapper om = objectMapper.copy();
         om.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        // 指定序列化输入的类型，类必须是非final修饰的。序列化时将对象全类名一起保存下来
+        om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
         jackson2JsonRedisSerializer.setObjectMapper(om);
         // stringRedisSerializer
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();

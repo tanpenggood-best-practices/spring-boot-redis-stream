@@ -3,7 +3,7 @@
     <property name="MY_PATTERN"
               value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [%thread] %C{36}.%M\\(%F:%L\\): %msg%n"/>
     <!-- contextName主要是为了区分在一个web容器下部署多个应用启用jmx时，不会出现混乱 -->
-    <contextName>hi-report</contextName>
+    <contextName>spring-boot-redis-stream-sample</contextName>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoder 默认配置为PatternLayoutEncoder -->

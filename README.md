@@ -24,6 +24,7 @@ I use the best practices of Redis stream in spring boot.
 - Java 1.8
 - Redis 5.0.10
 - Spring Boot 2.3.4.RELEASE
+- spring-boot-starter-data-redis 2.3.4.RELEASE
 - Jackson 2.11.2
 - Lombok 1.18.12
 
